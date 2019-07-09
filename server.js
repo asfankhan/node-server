@@ -7,12 +7,22 @@
 // console.log('Server running at http://127.0.0.1:80/');
 
 var express = require('express');
-var app = express();
 
-app.listen(3000, ()=>  {
-    console.log('listening');
-});
+var app = express();
+var favicon = require('serve-favicon')
+
+var path = require('path');
+
+let port = 3000;
+
+
+app.use(favicon(path.join(__dirname, 'public/assets', 'fox_logo_pcg_icon.ico')))
+app.use('/', express.static(path.join(__dirname, 'public')))
 
 app.get('/',(req,res)=>  {
-    res.send('hi');
+    res.sendFile(path.join(__dirname + '/public/index.html'));
+    // res.send('hi');
+});
+app.listen(port, ()=>  {
+  console.log('listening on Port:' + port );
 });
