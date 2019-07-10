@@ -12,9 +12,11 @@ var log = {
 class roomData{
 
 }
-exports.print = () => {
+
+module.exports.print = () => {
     console.log("print funtion")
 }
-module.exports = {
-    log : log
-  }
+
+// module.exports = {
+//     log : log
+//   }
