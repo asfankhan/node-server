@@ -13,6 +13,8 @@ var favicon = require('serve-favicon')
 
 var path = require('path');
 
+var {log, print} = require('./server/testExport.js');
+
 let port = 3000;
 
 
@@ -23,6 +25,9 @@ app.get('/',(req,res)=>  {
     res.sendFile(path.join(__dirname + '/public/index.html'));
     // res.send('hi');
 });
+
+log.info('Node.js started');
+console.log(print)
 app.listen(port, ()=>  {
   console.log('listening on Port:' + port );
 });
