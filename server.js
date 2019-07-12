@@ -1,26 +1,21 @@
-// var http = require('http');
-// var express = require("express")
-// http.createServer(function (req, res) {
-//   res.writeHead(200, {'Content-Type': 'text/plain'});
-//   res.end('Hello World\n');
-// }).listen(80, '127.0.0.1');
-// console.log('Server running at http://127.0.0.1:80/');
-
+require('dotenv').config()
 var express = require('express');
 var app = express();
-let port = 3000;
-
-var server = app.listen(port, ()=>  {
-  console.log('listening on Port:' + port );
-});
 
 var io = require('socket.io')(server);
-
 var favicon = require('serve-favicon')
-
 var path = require('path');
-
 var log = require('./server/testExport.js');
+
+const HOST = process.env.HOST || 'localhost';
+const PORT = process.env.PORT || 3000;
+
+
+var server = app.listen(PORT, ()=>  {
+  console.log('listening on ' +HOST + ":" + PORT );
+});
+
+
 
 
 
