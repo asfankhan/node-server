@@ -1,10 +1,11 @@
-require('dotenv').config()
 var express = require('express');
 var app = express();
 
+var path = require('path');
+require('dotenv').config({path: __dirname + '/.env'})
+
 var io = require('socket.io')(server);
 var favicon = require('serve-favicon')
-var path = require('path');
 var log = require('./server/testExport.js');
 
 const HOST = process.env.HOST || 'localhost';
