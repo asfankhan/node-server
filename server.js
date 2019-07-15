@@ -11,7 +11,7 @@ const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
 
 
-var server = app.listen( 3000, ()=>  {
+var server = app.listen( 3000, (req, res)=>  {
   console.log('listening on ' +HOST + ":" + PORT );
 });
 var io = require('socket.io')(server);
@@ -27,6 +27,10 @@ app.get('/',(req,res)=>  {
   res.sendFile(path.join(__dirname + '/public/index.html'));
   // res.send('hi');
 });
+app.post('/',(req,res)=>  {
+  console.log('Posted')
+  // res.send('hi');
+});
 
 // log.log.info('Node.js started');
 // log.print();
@@ -39,14 +43,35 @@ io.sockets.on('connection', function (socket) {
   console.log('A client is connected!');
 });
 
-socket1 = null
-socket2 = null
+socketServer = null
+socketClient = null
+const spawn = require("child_process").spawn;
+arg1 = 'asfan'
+arg2 = 'Khan'
+
+const pyProcess = spawn('python',["./scripts/test.py", arg1,arg2]);
+
+pyProcess.stdout.setEncoding("utf8");
+pyProcess.stdout.on('data', (data) => {
+    // Do something with the data returned from python script
+    console.log(data.toString())
+});
+pyProcess.stdout.on("end", data => {
+  console.log("Token closing connection.");
+});
 
 io.on('connection', function (socket) {
 
-  io.sockets.emit('sockets', io.sockets);
+  // io.sockets.emit('sockets', io.sockets);
 
-  console.log('Connected to socket')
+  if(socketServer == null){
+    console.log('Connected to socket as Server')
+  }else {
+    console.log('Connected to socket as Client')
+    arg1 = 't'
+    const pyProcess = spawn('python',["path/to/script.py", arg1]);
+
+  }
 
   socket.emit('welcome', { message: 'Welcome!' });
 
