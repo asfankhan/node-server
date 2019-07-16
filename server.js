@@ -8,10 +8,10 @@ var favicon = require('serve-favicon')
 var log = require('./server/testExport.js');
 
 const HOST = process.env.HOST || 'localhost';
-const PORT = process.env.PORT || 3000;
+const PORT = Math.floor(Math.random() * 1000) + 8000;
 
 
-var server = app.listen( 3000, (req, res)=>  {
+var server = app.listen( PORT, (req, res)=>  {
   console.log('listening on ' +HOST + ":" + PORT );
 });
 var io = require('socket.io')(server);

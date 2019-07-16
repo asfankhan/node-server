@@ -18,44 +18,40 @@ var server = app.listen( 3000, (req, res)=>  {
 var io = require('socket.io')(server);
 
 
-
-
-
 app.use(favicon(path.join(__dirname, 'public/assets', 'fox_logo_pcg_icon.ico')))
 app.use('/', express.static(path.join(__dirname, 'public')))
-
 app.get('/',(req,res)=>  {
   res.sendFile(path.join(__dirname + '/public/server.html'));
   // res.send('hi');
 });
 
-Client1 = null
-Client2 = null
+Client1 = {}
+Client2 = {}
 
 io.on('connection', (socket) => {
 
-    console.log("User has connected")
-    
-    if(Client1 == null || ( Client1 && Client1.socket  == socket) ){
-        Client1.socket = socket
-        console.log('Recieved Socket from client one')
-    }else if(Client2 == null || ( Client2 && Client2.socket  == socket )) {
-        Client2.socket = socket
-        console.log('Recieved Socket from client two')
-    }else{
-        console.log('Error during Storing')
-    }
-  
-    if(Client1 && Client2){
-        Client1.socket.emit('Connect', Client2)
-        Client2.socket.emit('Connect', Client1)
-    }
+  console.log("User has connected")
 
-    socket.emit('welcome', { message: 'Welcome!' });
-  
-    socket.on('i am client', function() {
-      console.log('received a message from the client.');
-    });
-  
-  });
+  if(Object.keys(Client1).length == 0  || Client1.socket == socket){
+    Client1.socket = socket
+    console.log('Recieved Socket from client one')
+  }else if(Object.keys(Client2).length == 0 || Client2.socket == socket) {
+      Client2.socket = socket
+      console.log('Recieved Socket from client two')
+  }else{
+      console.log('Error during Storing')
+  }
+
+  if( Object.keys(Client1).length != 0 && Object.keys(Client2).length != 0){
+      // Client1.socket.emit('Connect', Client2)
+      // Client2.socket.emit('Connect', Client1)
+  }
+
+  // socket.emit('welcome', { message: 'Welcome!' });
+
+  // socket.on('i am client', function() {
+  //   console.log('received a message from the client.');
+  // });
+
+});
   
