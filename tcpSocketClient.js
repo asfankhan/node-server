@@ -1,0 +1,15 @@
+var io = require('socket.io-client')
+
+var socket = io.connect('127.0.0.1:3000', {reconnect: true});
+
+console.log('2');
+
+socket.on('connect', function () {
+    console.log('connected to localhost:3000');
+    socket.on('clientEvent', function (data) {
+        console.log('message from the server:', data);
+        socket.emit('serverEvent', "thanks server! for sending '" + data + "'");
+    });
+});
+
+console.log('3');
