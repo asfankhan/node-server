@@ -10,15 +10,29 @@ server.listen(port, host, () => {
 let sockets = [];
 
 server.on('connection', function(sock) {
+
     console.log('CONNECTED: ' + sock.remoteAddress + ':' + sock.remotePort);
     sockets.push(sock);
+    console.log('sockets connected: ' + sockets.length);
 
     sock.on('data', function(data) {
-        console.log('DATA ' + sock.remoteAddress + ': ' + data);
-        // Write the data back to all the connected, the client will receive it as data from the server
-        sockets.forEach(function(sock, index, array) {
-            sock.write(sock.remoteAddress + ':' + sock.remotePort + " said " + data + '\n');
-        });
+
+        if(sockets.length==2){
+            console.log('==----==Two Sockets Connected==----==');
+            var obj1 = { address: sockets[1].remoteAddress, port: sockets[1].remotePort };
+            sockets[0].write(JSON.stringify(obj1))
+
+            var obj2 = { address: sockets[0].remoteAddress, port: sockets[0].remotePort };
+            sockets[1].write(JSON.stringify(obj2))
+            return;
+        }
+
+
+        // console.log('DATA ' + sock.remoteAddress + ': ' + data);
+        // // Write the data back to all the connected, the client will receive it as data from the server
+        // sockets.forEach(function(socket, index, array) {
+        //     socket.write(sock.remoteAddress + ':' + sock.remotePort + " said " + data + '\n');
+        // });
     });
 
     // Add a 'close' event handler to this instance of socket
