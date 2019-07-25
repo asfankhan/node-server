@@ -1,3 +1,6 @@
+var path = require('path');
+require('dotenv').config({path: __dirname + '/.env'})
+
 const net = require('net');
 const readline = require('readline');
 
@@ -11,25 +14,39 @@ client.connect(port, awsHost, function() {
     client.write("Hello From Client " + client.address().address);
 });
 
-// server.js
-var server = require('net').createServer(function (socket) {
-    console.log('> Connect to this public endpoint with clientB:', socket.remoteAddress + ':' + socket.remotePort);
-}).listen(port, function (err) {
-    if(err) return console.log(err);
-    console.log('> (server) listening on:', server.address().address + ':' + server.address().port)
-});
 
-
+let c;
+let server;
 client.on('data', function(data) {
 
-    if(process.env.SERVER == true){
-        console.log('Creating server: ' + data);
-    }else{
-        console.log('Creating Client: ' + data);
-    }
     data = JSON.parse(data)
-    console.log('Address: ' + data.address);
-    console.log('Port: ' + data.port);
+    console.log(process.env.SERVER)
+
+    if(process.env.SERVER == 'true'){
+        
+        console.log('Creating server: ' + data.address +":"+data.port);   
+
+        // do not end the connection, keep it open to the public server
+        // and start a tcp server listening on the ip/port used to connected to server.js
+        server = require('net').createServer(function (socket) {
+            console.log('> (clientA) someone connected, it\s:', socket.remoteAddress, socket.remotePort);
+            socket.write("Hello there NAT traversal man, this is a message from a client behind a NAT!");
+        }).listen(client.address().port, client.address().address, function (err) {
+            if(err) return console.log(err);
+            console.log('> (clientA) listening on:', client.address().address + ':' + client.address().port);
+        });
+    
+    }else{
+        
+        console.log('Creating Client: ' + data.address +":"+data.port);
+        client = require('net').createConnection({host : data.address, port : data.port},function () {
+            console.log('> (clientB) connected to clientA!');
+        
+            client.on('data', function (data) {
+                console.log(data.toString());
+            });
+        });
+    }
 
 
 });
