@@ -47,7 +47,7 @@ let client = net.createConnection({host : host, port : port}, () => {
 });
 client.on('data', function(data) {
     data = JSON.parse(data)
-    console.log("(Client) " +data.toString());
+    console.log("(Client) " + data.toString());
 });
 // client.connect(port, awsHost, function() {
 

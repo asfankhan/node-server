@@ -20,7 +20,10 @@ server.on('connection', function(sock) {
         console.log('>(Server Recieved) '+ data)
         data = JSON.parse(data)
         if(data.isServer){
+            serverSocket = data
             console.log('>(Server Recieved) Recieved Server Socket')
+        }else{
+            sock.write(JSON.stringify(serverSocket))
         }
         // if(sockets.length==2){
         //     console.log('==----==Two Sockets Connected==----==');
