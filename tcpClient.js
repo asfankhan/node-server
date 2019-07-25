@@ -12,12 +12,13 @@ const awsHost = '54.237.223.142';
 let server;
 
 
-let client = net.createConnection({host : awsHost, port : port}, () => {
+let client = net.createConnection({host : host, port : port}, () => {
 
     console.log('> connected to public server via local endpoint:', client.localAddress + ':' + client.localPort);
 
     if(process.env.SERVER == 'true'){
-        data = { address: client.localAddress, port: client.localPort, server: process.env.SERVER };
+        data = { address: client.localAddress, port: client.localPort, isServer: process.env.SERVER };
+        console.log(data)
         client.write(JSON.stringify(data))
     }
 
@@ -44,7 +45,10 @@ let client = net.createConnection({host : awsHost, port : port}, () => {
     }
 
 });
-
+client.on('data', function(data) {
+    data = JSON.parse(data)
+    console.log("(Client) " +data.toString());
+});
 // client.connect(port, awsHost, function() {
 
 //     console.log(">(AWS-Connection) "+ client.address().address +":"+ client.address().port);

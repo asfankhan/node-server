@@ -17,7 +17,11 @@ server.on('connection', function(sock) {
     console.log('sockets connected: ' + sockets.length);
 
     sock.on('data', function(data) {
-        console.log(data)
+        console.log('>(Server Recieved) '+ data)
+        data = JSON.parse(data)
+        if(data.isServer){
+            console.log('>(Server Recieved) Recieved Server Socket')
+        }
         // if(sockets.length==2){
         //     console.log('==----==Two Sockets Connected==----==');
         //     var obj1 = { address: sockets[1].remoteAddress, port: sockets[1].remotePort };
