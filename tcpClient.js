@@ -20,6 +20,10 @@ let client = net.createConnection({host : awsHost, port : port}, () => {
         data = { address: client.localAddress, port: client.localPort, isServer: process.env.SERVER };
         console.log(data)
         client.write(JSON.stringify(data))
+    }else{
+        data = { address: client.localAddress, port: client.localPort, isServer: false };
+        console.log(data)
+        client.write(JSON.stringify(data))
     }
 
 
