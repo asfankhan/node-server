@@ -15,6 +15,9 @@ server.on('connection', function(sock) {
     console.log('CONNECTED: ' + sock.remoteAddress + ':' + sock.remotePort);
     sockets.push(sock);
     console.log('sockets connected: ' + sockets.length);
+    if(data.isServer==false){
+        sock.write(JSON.stringify(serverSocket))
+    }
 
     sock.on('data', function(data) {
         console.log('>(Server Recieved) '+ data)
@@ -23,7 +26,7 @@ server.on('connection', function(sock) {
             serverSocket = data
             console.log('>(Server Recieved) Recieved Server Socket')
         }else{
-            sock.write(JSON.stringify(serverSocket))
+            // sock.write(JSON.stringify(serverSocket))
         }
         // if(sockets.length==2){
         //     console.log('==----==Two Sockets Connected==----==');
