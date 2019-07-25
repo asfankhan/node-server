@@ -4,8 +4,8 @@ const readline = require('readline');
 const client = new net.Socket();
 const port = 33333;
 const host = '127.0.0.1';
-
-client.connect(port, host, function() {
+const awsHost = '54.237.223.142';
+client.connect(port, awsHost, function() {
     console.log('Connected'+"My address "+ client.address().address +":"+ client.address().port);
     client.write("Hello From Client " + client.address().address);
 });
