@@ -12,7 +12,7 @@ const awsHost = '54.237.223.142';
 let server;
 
 
-let client = net.createConnection({host : host, port : port}, () => {
+let client = net.createConnection({host : awsHost, port : port}, () => {
 
     console.log('> connected to public server via local endpoint:', client.localAddress + ':' + client.localPort);
 
@@ -34,14 +34,7 @@ let client = net.createConnection({host : host, port : port}, () => {
             console.log('> (clientA) listening on:', client.localAddress + ':' + client.localPort);
         });
     }else{
-        // read the server's output to find the public endpoint of A:
-        var c = require('net').createConnection({host : 'PUBLIC_IP_OF_CLIENT_A', port : PUBLIC_PORT_OF_CLIENT_A},function () {
-            console.log('> (clientB) connected to clientA!');
 
-            c.on('data', function (data) {
-                console.log(data.toString());
-            });
-        });
     }
 
 });
