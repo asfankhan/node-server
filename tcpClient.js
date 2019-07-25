@@ -42,9 +42,17 @@ let client = net.createConnection({host : awsHost, port : port}, () => {
     }
 
 });
+var c;
 client.on('data', function(data) {
+    console.log(">(Client) " + data.toString());
     data = JSON.parse(data)
-    console.log("(Client) " + data.toString());
+    c = require('net').createConnection({host : data.address, port : data.port},function () {
+        console.log('> (clientB) connected to clientA!');
+    
+        c.on('data', function (data) {
+            console.log(data.toString());
+        });
+    });
 });
 // client.connect(port, awsHost, function() {
 
