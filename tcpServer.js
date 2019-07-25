@@ -41,7 +41,9 @@ server.on('connection', function(sock) {
             return o.remoteAddress === sock.remoteAddress && o.remotePort === sock.remotePort;
         })
         if (index !== -1) sockets.splice(index, 1);
-        console.log('CLOSED: ' + sock.remoteAddress + ' ' + sock.remotePort);
+        console.log('Closed: ' + sock.remoteAddress + ' ' + sock.remotePort);
+        console.log('Sockets Remaining: ' + sockets.length + '\n');
+
     });
 
     sock.on("error", (err) =>{
