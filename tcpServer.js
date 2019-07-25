@@ -8,6 +8,7 @@ server.listen(port, host, () => {
 });
 
 let sockets = [];
+let serverSocket;
 
 server.on('connection', function(sock) {
 
@@ -16,16 +17,16 @@ server.on('connection', function(sock) {
     console.log('sockets connected: ' + sockets.length);
 
     sock.on('data', function(data) {
+        console.log(data)
+        // if(sockets.length==2){
+        //     console.log('==----==Two Sockets Connected==----==');
+        //     var obj1 = { address: sockets[1].remoteAddress, port: sockets[1].remotePort };
+        //     sockets[0].write(JSON.stringify(obj1))
 
-        if(sockets.length==2){
-            console.log('==----==Two Sockets Connected==----==');
-            var obj1 = { address: sockets[1].remoteAddress, port: sockets[1].remotePort };
-            sockets[0].write(JSON.stringify(obj1))
-
-            var obj2 = { address: sockets[0].remoteAddress, port: sockets[0].remotePort };
-            sockets[1].write(JSON.stringify(obj2))
-            return;
-        }
+        //     var obj2 = { address: sockets[0].remoteAddress, port: sockets[0].remotePort };
+        //     sockets[1].write(JSON.stringify(obj2))
+        //     return;
+        // }
 
 
         // console.log('DATA ' + sock.remoteAddress + ': ' + data);
