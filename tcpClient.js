@@ -17,14 +17,17 @@ client.on('data', function(data) {
     console.log('Port: ' + data.port);
 
 });
+
 client.on('close', function() {
     console.log('Connection closed');
 });
+
 client.on("error", (err) =>{
     console.log("Caught flash policy server socket error: ")
     console.log(err.stack)
 
 });
+
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
