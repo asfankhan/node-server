@@ -8,52 +8,54 @@ const port = 33333;
 const host = '127.0.0.1';
 const awsHost = '54.237.223.142';
 
+so_reuseaddr = true;
+
 // const client = new net.Socket();
 let server;
 
+connectedSocket  = null;
 
 let client = net.createConnection({host : awsHost, port : port}, () => {
 
-    console.log('> connected to public server via local endpoint:', client.localAddress + ':' + client.localPort);
+    console.log('>Connected to Aws server via local endpoint:', client.localAddress + ':' + client.localPort);
 
-    if(process.env.SERVER == 'true'){
-        data = { address: client.localAddress, port: client.localPort, isServer: process.env.SERVER };
-        console.log(data)
-        client.write(JSON.stringify(data))
-    }else{
-        data = { address: client.localAddress, port: client.localPort, isServer: false };
-        console.log(data)
-        client.write(JSON.stringify(data))
-    }
+    data = { address: client.localAddress, port: client.localPort, isServer: true };
+    console.log(data)
+    client.write(JSON.stringify(data))
+
+
 
     // do not end the connection, keep it open to the public server
     // and start a tcp server listening on the ip/port used to connected to server.js
-    if(process.env.SERVER == 'true'){
-        server = net.createServer( (socket) => {
-            console.log('> (clientA) someone connected, it\s:', socket.remoteAddress, socket.remotePort);
-            socket.write("Hello there NAT traversal man, this is a message from a client behind a NAT!");
-        }).listen(client.localPort, client.localAddress, function (err) {
-            if(err) return console.log(err);
-            console.log('> (clientA) listening on:', client.localAddress + ':' + client.localPort);
-        });
-    }else{
+    server = net.createServer( (socket) => {
+        connectedSocket = socket
 
-    }
+        console.log('>(clientS) someone connected, it\s:', socket.remoteAddress, socket.remotePort);
+        socket.write("Hello there NAT traversal man, this is a message from a client behind a NAT!");
+        socket.on('data', function (data) {
+            console.log(data.toString());
+        });
+    }).listen(client.localPort, client.localAddress, function (err) {
+        if(err) return console.log(err);
+        console.log('>(clientS) listening on:', server.address().address + ':' + server.address().port);
+    });
 
 });
-
 var c;
 client.on('data', function(data) {
+
     console.log(">(Client) " + data.toString());
     data = JSON.parse(data)
+
     c = require('net').createConnection({host : data.address, port : data.port},function () {
-        console.log('> (clientB) connected to clientA!');
+        console.log('> (client) connected to clientS!');
     
         c.on('data', function (data) {
             console.log(data.toString());
         });
     });
 });
+
 
 client.on('close', function() {
     console.log('Connection closed');
@@ -77,8 +79,7 @@ rl.on('line', (input) => {
         rl.close();
     
     console.log("Input: " +input);
-    // client.write( input + " " + client.address().address);    
-    c.write( input + "- Client:" + client.address().address+":"+client.address().port);    
+    connectedSocket.write( input + "- Server:" + server.address().address+":"+server.address().port);    
 
 }).on('close', () => {
     console.log('Program Ended');
