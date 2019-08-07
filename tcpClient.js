@@ -14,35 +14,11 @@ let server;
 
 let client = net.createConnection({host : awsHost, port : port}, () => {
 
-    console.log('> connected to public server via local endpoint:', client.localAddress + ':' + client.localPort);
+    console.log('> Connected to public server via local endpoint:', client.localAddress + ':' + client.localPort);
 
-        data = { address: client.localAddress, port: client.localPort, isServer: false };
-        console.log(data)
-        client.write(JSON.stringify(data))
-
-    // if(process.env.SERVER == 'true'){
-    //     data = { address: client.localAddress, port: client.localPort, isServer: process.env.SERVER };
-    //     console.log(data)
-    //     client.write(JSON.stringify(data))
-    // }else{
-    //     data = { address: client.localAddress, port: client.localPort, isServer: false };
-    //     console.log(data)
-    //     client.write(JSON.stringify(data))
-    // }
-
-    // do not end the connection, keep it open to the public server
-    // and start a tcp server listening on the ip/port used to connected to server.js
-    // if(process.env.SERVER == 'true'){
-    //     server = net.createServer( (socket) => {
-    //         console.log('> (clientA) someone connected, it\s:', socket.remoteAddress, socket.remotePort);
-    //         socket.write("Hello there NAT traversal man, this is a message from a client behind a NAT!");
-    //     }).listen(client.localPort, client.localAddress, function (err) {
-    //         if(err) return console.log(err);
-    //         console.log('> (clientA) listening on:', client.localAddress + ':' + client.localPort);
-    //     });
-    // }else{
-
-    // }
+    data = { address: client.localAddress, port: client.localPort, isServer: false };
+    console.log(data)
+    client.write(JSON.stringify(data))
 
 });
 
