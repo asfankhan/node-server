@@ -48,14 +48,14 @@ client.on('data', function(data) {
     console.log(">(Client Server) " + data.toString());
     data = JSON.parse(data)
 
-//     c = require('net').createConnection({host : data.address, port : data.port},function () {
-//         console.log('> (Client Server) connected to clientS!');
+    // c = require('net').createConnection({host : data.address, port : data.port},function () {
+    //     console.log('> (Client Server) connected to clientS!');
     
-//         c.on('data', function (data) {
-//             console.log(data.toString());
-//         });
-//     });
-// });
+    //     c.on('data', function (data) {
+    //         console.log(data.toString());
+    //     });
+    // });
+});
 
 client.on('close', function() {
     console.log('Connection closed');
