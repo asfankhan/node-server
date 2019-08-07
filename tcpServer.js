@@ -3,20 +3,33 @@ const port = 33333;
 const host = '0.0.0.0';
 
 const server = net.createServer();
+
+let serverSocket;
+let sockets= [];
+
+let serverSockets ={};
+let clientSockets = [];
+
 server.listen(port, host, () => {
     console.log('>(Server) TCP Aws Server is running on port ' + port + '.');
 });
+//////////////////////////////////////////on Socekt Connect//////////////////////////////////////////
+server.on('connection', (socket) => {
 
-let sockets = [];
-let serverSocket;
+    socket.id = Math.floor(Math.random() * 1000000000);
+    clientSockets[socket.id] = socket;
 
-server.on('connection', function(sock) {
+    console.log('>(Server) Connected: ' + socket.remoteAddress + ':' + socket.remotePort);
+    console.log('>Total Sockets Connected: ' + sockets.length);
+    console.log('>Total clientSockets Connected: ' + Object.keys(clientSockets));
 
-    console.log('>(Server) Socket Connected: ' + sockets.length);
-    console.log('CONNECTED: ' + sock.remoteAddress + ':' + sock.remotePort);
-    sockets.push(sock);
+    console.log('socket.id ' + socket.id)
 
-    sock.on('data', function(data) {
+    sockets.push(socket);
+
+    
+    ///////////On Data Recieved///////////
+    socket.on('data', function(data) {
         console.log('>(Server) Recieved '+ data)
         data = JSON.parse(data)
         if(data.isServer){
@@ -29,18 +42,21 @@ server.on('connection', function(sock) {
     });
 
     // Add a 'close' event handler to this instance of socket
-    sock.on('close', function(data) {
+    socket.on('close', function(data) {
+
+        delete clientSockets[socket.id];
+
         let index = sockets.findIndex(function(o) {
-            return o.remoteAddress === sock.remoteAddress && o.remotePort === sock.remotePort;
+            return o.remoteAddress === socket.remoteAddress && o.remotePort === socket.remotePort;
         })
         if (index !== -1) sockets.splice(index, 1);
 
-        console.log('>(Server) Sockets Remaining: ' + sockets.length + '\n');
-        console.log('Closed: ' + sock.remoteAddress + ' ' + sock.remotePort);
+        console.log('>(Server) Sockets Remaining: ' + socket.length + '\n');
+        console.log('Closed: ' + socket.remoteAddress + ' ' + socket.remotePort);
 
     });
 
-    sock.on("error", (err) =>{
+    socket.on("error", (err) =>{
         console.log(">(Server) Caught flash policy server socket error: ")
         console.log(err.stack)
     
