@@ -11,7 +11,6 @@ const awsHost = '54.237.223.142';
 // const client = new net.Socket();
 let server;
 
-
 let client = net.createConnection({host : awsHost, port : port}, () => {
 
     console.log('> Connected to public server via local endpoint:', client.localAddress + ':' + client.localPort);
