@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8">
+  <title>Client Page</title>
+  <base href="/">
+
+   <link rel="icon" type="image/x-icon" href="assets/fox_logo_pcg_icon.ico">
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+<body>
+
+  <div id="servers" class="row">
+
+  </div>
+
+  <div class="row">
+    <div class="col-12">Data</div>
+    <button id='target' class="btn btn-primary col-2">get Servers</button>
+  </div>
+
+  <ul id='messages'></ul>
+  <script src='http://code.jquery.com/jquery-1.7.2.min.js'></script>
+  <script>
+
+    $( document ).ready(function() {
+      console.log( "Page Ready!" );
+
+      $( "#target" ).click(() => {
+        getServerRooms();
+      });
+      getServerRooms();
+
+
+    });
+    function printWorking(var1){
+      console.log(" : ")
+    }
+    function getServerRooms(){
+      $.ajax({
+        url: '/test',
+        complete: function(data) {
+          console.log('Get Data from /test');
+          obj = JSON.parse(data.responseText);
+          console.log(obj);
+
+          document.getElementById('servers').innerHTML = "";
+          Object.keys(obj).forEach((el)=>{
+
+            var div = document.createElement("div");
+            div.className = "col-12";
+            div.addEventListener("click", function(){
+              console.log(obj[el].ip+" : "+obj[el].port)
+            });
+            div.innerHTML ="Server " + obj[el].ip+ ' ' + obj[el].port;
+            document.getElementById("servers").appendChild(div);
+
+          })
+
+        }
+      });
+    }
+  </script>
+</body>
+</html>

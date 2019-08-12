@@ -27,9 +27,7 @@ server.on('connection', (socket) => {
     socket.ip = socket.remoteAddress
     socket.port = socket.remotePort
 
-
     console.log('Open: ' + socket.remoteAddress + ' ' + socket.remotePort);
-
     sockets.push(socket);
 
     ///////////On Data Recieved///////////
@@ -84,4 +82,7 @@ app.get('/test', function(req, res, next) {
     res.json(serverSockets);
 });
 
-app.listen(8080);
+
+app.listen(8080, host, () => {
+    console.log('>(Server) Website on : 8000');
+});
