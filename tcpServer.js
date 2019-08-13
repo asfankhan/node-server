@@ -44,7 +44,7 @@ server.on('connection', (socket) => {
             clientSockets[socket.id] = socket;
             console.log('>(Server) Total clientSockets Connected: ' + Object.keys(clientSockets).length);
 
-            sock.write(JSON.stringify(serverSocket))
+            socket.write(JSON.stringify(serverSocket))
             // console.log('>(Server) Sent Client-Server data to Client')
         }
     });
