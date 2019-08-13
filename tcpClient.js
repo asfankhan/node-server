@@ -18,7 +18,21 @@ let client = net.createConnection({host : awsHost, port : port}, () => {
     data = { address: client.localAddress, port: client.localPort, isServer: false };
     console.log(data)
     client.write(JSON.stringify(data))
-
+    c = require('net').createConnection({host : data.address, port : data.port},function () {
+        console.log('>(ClientB) connected to clientA!');
+    
+        c.on('data', function (data) {
+            console.log(data.toString());
+        });
+        c.on('close', function() {
+            console.log('Connection closed');
+        });
+        
+        c.on("error", (err) =>{
+            console.log("Caught flash policy server socket error: ")
+            console.log(err.stack)
+        });
+    });
 });
 
 var c;
@@ -76,13 +90,49 @@ rl.on('line', (input) => {
 });
 
 var path = require('path');
-const express = require('express');
+const express = require('express'),
+    bodyParser = require('body-parser');
+
 const app = express();
 
 app.use(express.static(__dirname + '/client'));
+app.use(express.json());
 
 app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname + './client/client.html'));
 });
+
+app.post('/test', function(request, response) {
+    console.log(request.body);
+    let data = request.body
+    console.log(data.address);
+    console.log(data.port);
+
+    net.createConnection({host : awsHost, port : port}, () => {
+
+        console.log('> Connected to public server via local endpoint:', client.localAddress + ':' + client.localPort);
+    
+        data = { address: client.localAddress, port: client.localPort, isServer: false };
+        console.log(data)
+        client.write(JSON.stringify(data))
+        c = require('net').createConnection({host : data.address, port : data.port},function () {
+            console.log('>(ClientB) connected to clientA!');
+        
+            c.on('data', function (data) {
+                console.log(data.toString());
+            });
+            c.on('close', function() {
+                console.log('Connection closed');
+            });
+            
+            c.on("error", (err) =>{
+                console.log("Caught flash policy server socket error: ")
+                console.log(err.stack)
+            });
+        });
+    });
+
+
+ });
 
 app.listen(8082);
