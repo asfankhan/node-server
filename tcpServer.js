@@ -1,48 +1,94 @@
 const net = require('net');
+var path = require('path');
+const express = require('express');
+const app = express();
+
 const port = 33333;
 const host = '0.0.0.0';
 
 const server = net.createServer();
+
+let serverSocket;
+let sockets= [];
+
+let serverSockets ={};
+let clientSockets = [];
+
 server.listen(port, host, () => {
     console.log('>(Server) TCP Aws Server is running on port ' + port + '.');
 });
 
-let sockets = [];
-let serverSocket;
+//////////////////////////////////////////on External Socekt Connect//////////////////////////////////////////
+server.on('connection', (socket) => {
 
-server.on('connection', function(sock) {
+    if(!socket.id)
+        socket.id = Math.floor(Math.random() * 1000000000);
 
-    console.log('>(Server) Socket Connected: ' + sockets.length);
-    console.log('CONNECTED: ' + sock.remoteAddress + ':' + sock.remotePort);
-    sockets.push(sock);
+    socket.ip = socket.remoteAddress
+    socket.port = socket.remotePort
 
-    sock.on('data', function(data) {
+    console.log('Open: ' + socket.remoteAddress + ' ' + socket.remotePort);
+    sockets.push(socket);
+
+    ///////////On Data Recieved///////////
+    socket.on('data', function(data) {
         console.log('>(Server) Recieved '+ data)
         data = JSON.parse(data)
         if(data.isServer){
             serverSocket = data
+            serverSockets[socket.id] = socket;
+
             console.log('>(Server) Recieved Client-Server Socket')
         }else{
-            console.log('>(Server) Sent Client-Server data to Client')
-            sock.write(JSON.stringify(serverSocket))
+
+            clientSockets[socket.id] = socket;
+            console.log('>(Server) Total clientSockets Connected: ' + Object.keys(clientSockets).length);
+
+            socket.write(JSON.stringify(serverSocket))
+            // console.log('>(Server) Sent Client-Server data to Client')
         }
     });
 
     // Add a 'close' event handler to this instance of socket
-    sock.on('close', function(data) {
+    socket.on('close', function(data) {
+
+        delete clientSockets[socket.id];
+
         let index = sockets.findIndex(function(o) {
-            return o.remoteAddress === sock.remoteAddress && o.remotePort === sock.remotePort;
+            return o.remoteAddress === socket.remoteAddress && o.remotePort === socket.remotePort;
         })
         if (index !== -1) sockets.splice(index, 1);
 
         console.log('>(Server) Sockets Remaining: ' + sockets.length + '\n');
-        console.log('Closed: ' + sock.remoteAddress + ' ' + sock.remotePort);
+        console.log('Closed: ' + socket.remoteAddress + ' ' + socket.remotePort);
 
     });
 
-    sock.on("error", (err) =>{
+    socket.on("error", (err) =>{
         console.log(">(Server) Caught flash policy server socket error: ")
         console.log(err.stack)
     
     });
+});
+
+
+app.use(express.static(__dirname + '/public'));
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
+app.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname + './public/index.html'));
+});
+
+app.get('/test', function(req, res, next) {
+    res.json(serverSockets);
+});
+
+
+app.listen(8080, host, () => {
+    console.log('>(Server) Website on : 8000');
 });
