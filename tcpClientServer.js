@@ -29,9 +29,10 @@ let client = net.createConnection({host : awsHost, port : port}, () => {
     // and start a tcp server listening on the ip/port used to connected to server.js
     server = net.createServer( (socket) => {
         connectedSocket = socket
-
+        client = null;
         console.log('>(ClientServer) someone connected, it\s:', socket.remoteAddress, socket.remotePort);
         socket.write("Hello there NAT traversal man, this is a message from a client behind a NAT!");
+
         socket.on('data', function (data) {
             console.log(">(Received) "+data.toString());
         });
