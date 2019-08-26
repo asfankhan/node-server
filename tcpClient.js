@@ -14,7 +14,7 @@ const awsHost = '54.237.223.142';
 let server;
 
 
-let client = net.createConnection({host : awsHost, port : port}, () => {
+let client = net.createConnection({host : host, port : port}, () => {
 
     console.log('> connected to public server via local endpoint:', client.localAddress + ':' + client.localPort);
 
@@ -101,11 +101,22 @@ rl.on('line', (input) => {
         });
     } else if(input.match(regex)){
         if(this.getServers){
-            console.log('Picked number ip - ', this.getServers[Object.keys(this.getServers)[input.match(regex)[1]]].ip )
-            console.log('Picked number port - ', this.getServers[Object.keys(this.getServers)[input.match(regex)[1]]].port )
+            let selectedSocket = this.getServers[Object.keys(this.getServers)[input.match(regex)[1]]]
+            console.log('Picked number address - ', selectedSocket.address )
+            console.log('Picked number port - ', selectedSocket.port )
+
+            c = require('net').createConnection({host : selectedSocket.address, port : selectedSocket.port},function () {
+                console.log('> (clientB) connected to clientA!');
+            
+                c.on('data', function (data) {
+                    console.log(data.toString());
+                });
+            });
         }else{
             console.log("Try find first!")
         }
+    }else if(c){
+        c.write( input + "- Client:" + client.address().address+":"+client.address().port); 
     }
     
   
