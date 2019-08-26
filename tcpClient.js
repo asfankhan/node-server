@@ -1,4 +1,6 @@
 var path = require('path');
+const http = require('http');
+
 require('dotenv').config({path: __dirname + '/.env'})
 
 const net = require('net');
@@ -72,27 +74,52 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
+getServers=null;
 rl.on('line', (input) => {
     input.trim()
-    
-    if(input == "exit")
-        rl.close();
-    
     console.log("Input: " +input);
-    // client.write( input + " " + client.address().address);  
-    console.log("this.serverData: ", this.serverData);
-  
-    if(c){
-        c.write( input + "- Client:" + client.address().address+":"+client.address().port);    
-    }else{
-        c = require('net').createConnection({host : this.serverData.address, port : this.serverData.port},function () {
-            console.log('> (clientB) connected to clientA!');
-        
-            c.on('data', function (data) {
-                console.log(data.toString());
-            });
+
+    regex = /pick ([0-9])/
+    if(input == "exit"){rl.close();}
+    else if(input == 'find'){
+        http.get('http://localhost:33334/data', (resp) => {
+        let data = '';
+
+        // A chunk of data has been recieved.
+        resp.on('data', (chunk) => {
+            data += chunk;
         });
+
+        // The whole response has been received. Print out the result.
+        resp.on('end', () => {
+            console.log('Rooms: ',Object.keys(JSON.parse(data)));
+            this.getServers = JSON.parse(data)
+        });
+
+        }).on("error", (err) => {
+        console.log("Error: " + err.message);
+        });
+    } else if(input.match(regex)){
+        if(this.getServers){
+            console.log('Picked number ip - ', this.getServers[Object.keys(this.getServers)[input.match(regex)[1]]].ip )
+            console.log('Picked number port - ', this.getServers[Object.keys(this.getServers)[input.match(regex)[1]]].port )
+        }else{
+            console.log("Try find first!")
+        }
     }
+    
+  
+    // if(c){
+    //     c.write( input + "- Client:" + client.address().address+":"+client.address().port);    
+    // }else{
+    //     c = require('net').createConnection({host : this.serverData.address, port : this.serverData.port},function () {
+    //         console.log('> (clientB) connected to clientA!');
+        
+    //         c.on('data', function (data) {
+    //             console.log(data.toString());
+    //         });
+    //     });
+    // }
 
 }).on('close', () => {
     console.log('Program Ended');

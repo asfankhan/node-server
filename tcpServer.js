@@ -84,11 +84,18 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname + './public/index.html'));
 });
 
+
+app.get('/server', function(req, res, next) {
+    res.json(serverSockets);
+});
+
+app.get('/data', function(req, res, next) {
+    res.json(serverSockets);
+});
 app.get('/test', function(req, res, next) {
     res.json(serverSockets);
 });
 
-
-app.listen(8080, host, () => {
-    console.log('>(Server) Website on : 8000');
+app.listen(33334, host, () => {
+    console.log('>(Server) Website on : 33334');
 });
