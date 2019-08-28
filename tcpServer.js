@@ -21,49 +21,50 @@ server.listen(port, host, () => {
 //////////////////////////////////////////on External Socekt Connect//////////////////////////////////////////
 server.on('connection', (socket) => {
 
+    console.log('>(Server) Open connection with ' + socket.remoteAddress + ' ' + socket.remotePort);
+
     if(!socket.id)
         socket.id = Math.floor(Math.random() * 1000000000);
 
-    socket.ip = socket.remoteAddress
+    socket.address = socket.remoteAddress
     socket.port = socket.remotePort
 
-    console.log('Open: ' + socket.remoteAddress + ' ' + socket.remotePort);
     sockets.push(socket);
 
     ///////////On Data Recieved///////////
     socket.on('data', function(data) {
-        console.log('>(Server) Recieved '+ data)
-        data = JSON.parse(data)
-        if(data.isServer){
-            serverSocket = data
-            serverSockets[socket.id] = socket;
 
-            console.log('>(Server) Recieved Client-Server Socket')
+        console.log('>(Server) Recieved Data '+ data)
+        data = JSON.parse(data)
+
+        if(data.isServer){
+
+            serverSockets[socket.id] = socket;
+            console.log('>(Server) Total Client-Server Sockets Connected: ' + Object.keys(serverSockets).length);
+
         }else{
 
             clientSockets[socket.id] = socket;
-            console.log('>(Server) Total clientSockets Connected: ' + Object.keys(clientSockets).length);
+            console.log('>(Server) Total Client Sockets Connected: ' + Object.keys(clientSockets).length);
 
-            socket.write(JSON.stringify(serverSocket))
-            // console.log('>(Server) Sent Client-Server data to Client')
         }
     });
 
-    // Add a 'close' event handler to this instance of socket
+    ///////////On Close Event///////////
     socket.on('close', function(data) {
 
-        delete clientSockets[socket.id];
+        delete sockets[socket.id]
 
-        let index = sockets.findIndex(function(o) {
-            return o.remoteAddress === socket.remoteAddress && o.remotePort === socket.remotePort;
-        })
-        if (index !== -1) sockets.splice(index, 1);
-
+        if(serverSockets[socket.id]){
+            delete serverSockets[socket.id]
+        }else{
+            delete clientSockets[socket.id]
+        }
         console.log('>(Server) Sockets Remaining: ' + sockets.length + '\n');
-        console.log('Closed: ' + socket.remoteAddress + ' ' + socket.remotePort);
+        console.log('Closed: ' + socket.address + ' ' + socket.port);
 
     });
-
+    ///////////On Error Event///////////
     socket.on("error", (err) =>{
         console.log(">(Server) Caught flash policy server socket error: ")
         console.log(err.stack)

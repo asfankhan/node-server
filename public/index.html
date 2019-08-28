@@ -58,9 +58,9 @@
             var div = document.createElement("div");
             div.className = "col-12";
             div.addEventListener("click", function(){
-              console.log(obj[el].ip+" : "+obj[el].port)
+              console.log(obj[el].address+" : "+obj[el].port)
             });
-            div.innerHTML ="Server " + obj[el].ip+ ' ' + obj[el].port;
+            div.innerHTML ="Server " + obj[el].address+ ' ' + obj[el].port;
             document.getElementById("servers").appendChild(div);
 
           })

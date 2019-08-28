@@ -29,12 +29,16 @@ let client = net.createConnection({host : host, port : port}, () => {
     // and start a tcp server listening on the ip/port used to connected to server.js
     server = net.createServer( (socket) => {
         connectedSocket = socket
-        client = null;
+        // client = null;
         console.log('>(ClientServer) someone connected, it\s:', socket.remoteAddress, socket.remotePort);
         socket.write("Hello there NAT traversal man, this is a message from a client behind a NAT!");
 
         socket.on('data', function (data) {
             console.log(">(Received) "+data.toString());
+        });
+        socket.on("error", (err) =>{
+            console.log(">(ClientServer) Caught flash policy server socket error: ")
+            console.log(err.stack)
         });
     }).listen(client.localPort, client.localAddress, function (err) {
         if(err) return console.log(err);
@@ -48,14 +52,6 @@ client.on('data', function(data) {
 
     console.log(">(Client Server) " + data.toString());
     data = JSON.parse(data)
-
-    // c = require('net').createConnection({host : data.address, port : data.port},function () {
-    //     console.log('> (Client Server) connected to clientS!');
-    
-    //     c.on('data', function (data) {
-    //         console.log(data.toString());
-    //     });
-    // });
 });
 
 client.on('close', function() {
@@ -80,7 +76,8 @@ rl.on('line', (input) => {
         rl.close();
     
     console.log("Input: " +input);
-    connectedSocket.write( input + "- Server:" + server.address().address+":"+server.address().port);    
+    if(connectedSocket)
+        connectedSocket.write( input + "- Server:" + server.address().address+":"+server.address().port);    
 
 }).on('close', () => {
     console.log('Program Ended');
