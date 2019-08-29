@@ -1,6 +1,27 @@
 {
     "manifest_version": 2,
-    "name": "Codelab",
+    "name": "My Sockets app",
+    "sockets": {
+      "udp": {
+        // Permission for chrome.sockets.udp.send:
+        // The application is allowed to send udp packets
+        // to any host:port combination.
+        "send": "*"
+      },
+      "tcp": {
+        // Permission for chrome.sockets.tcp.connect:
+        // The application is allowed to connect only to the
+        // tcp server on 127.0.0.1 port 80.
+        "connect": "127.0.0.1:33333"
+      },
+      "tcpServer": {
+        // Permission for chrome.sockets.tcpServer.listen:
+        // The application is allowed to accept new client
+        // connections on the local address at port 80.
+        "listen": "127.0.0.1:33333"
+      }
+    },
+    "content_security_policy": "script-src 'self' http://code.jquery.com/jquery-1.7.2.min.js; object-src 'self'",
     "version": "1",
     "icons": {
       "128": "icon_128.png"
