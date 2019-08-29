@@ -89,14 +89,12 @@ app.get('/', function(req, res) {
 app.get('/server', function(req, res, next) {
     res.json(serverSockets);
 });
-
 app.get('/data', function(req, res, next) {
     res.json(serverSockets);
 });
 app.get('/test', function(req, res, next) {
     res.json(serverSockets);
 });
-
 app.listen(33334, host, () => {
     console.log('>(Server) Website on : 33334');
 });

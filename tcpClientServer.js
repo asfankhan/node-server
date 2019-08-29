@@ -23,8 +23,6 @@ let client = net.createConnection({host : host, port : port}, () => {
     console.log(data)
     client.write(JSON.stringify(data))
 
-
-
     // do not end the connection, keep it open to the public server
     // and start a tcp server listening on the ip/port used to connected to server.js
     server = net.createServer( (socket) => {

@@ -1,9 +1,3 @@
-//respond to events
-window.addEventListener('message',function(event) {
-    if(event.origin !== 'http://davidwalsh.name') return;
-    console.log('message received:  ' + event.data,event);
-    event.source.postMessage('holla back youngin!',event.origin);
-},false);
 
 $( document ).ready(function() {
   console.log( "Page Ready!" );
@@ -11,8 +5,8 @@ $( document ).ready(function() {
   $( "#target" ).click(() => {
     getServerRooms();
   });
-  getServerRooms();
-
+  // getServerRooms();
+  chrome.runtime.sendMessage("test");
 
 });
 function printWorking(var1){
@@ -33,6 +27,12 @@ function getServerRooms(){
         var div = document.createElement("div");
         div.className = "col-12";
         div.addEventListener("click", function(){
+
+          chrome.runtime.sendMessage({
+            type:'serverSelected',
+            data:obj[el]
+          });
+
           console.log(obj[el].address+" : "+obj[el].port)
         });
         div.innerHTML ="Server " + obj[el].address+ ' ' + obj[el].port;
@@ -44,6 +44,25 @@ function getServerRooms(){
   });
 }
 
+function transferData(data){
+  // obj = JSON.parse(data.responseText);
+  console.log(data);
+
+  var div = document.createElement("div");
+  div.className = "col-12";
+  div.innerHTML =data
+
+  div.addEventListener("click", function(){
+
+    chrome.runtime.sendMessage({
+      type:null,
+      data:data
+    });
+
+  });
+  document.getElementById("messages").appendChild(div);
+
+}
 
 
 // var socket = io.connect('http://localhost:8000');
