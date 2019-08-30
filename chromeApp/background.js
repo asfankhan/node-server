@@ -12,7 +12,7 @@ const host = '127.0.0.1';
 const awsHost = '54.237.223.142';
 
 ///////////////////////////////On Start: Create Window///////////////////////////////
-chrome.app.runtime.onLaunched.addListener(function() {
+chrome.app.runtime.onLaunched.addListener(() => {
     chrome.app.window.create('index.html', {
       id: 'main',
       minWidth: 400,
@@ -61,8 +61,9 @@ chrome.sockets.tcp.create({}, (createInfo) => {
         console.log(">(Socket"+createInfo.socketId+"): Disconnected from "+ host+":"+ port)
     });
 });
+
 ///////////////////////////////Sockets: on data received ///////////////////////////////
-chrome.sockets.tcp.onReceive.addListener( function(data) {
+chrome.sockets.tcp.onReceive.addListener( (data) => {
     if (!("TextDecoder" in window))
         console.log("Sorry, this browser does not support TextDecoder...");
     
