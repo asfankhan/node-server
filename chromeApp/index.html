@@ -4,27 +4,40 @@
   <meta charset="utf-8">
   <link rel="icon" type="image/x-icon" href="assets/fox_logo_pcg_icon.ico">
   <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
-
+  <link rel="stylesheet" href="css/bootstrap.min.css">
 </head>
-<body>
+<body class="container-fluid">
 
-  <h1>Test Appss</h1>
-
-  <div id="servers" class="row">
-
+  <div class="row" style="text-align: center; background: #aaa;">
+    <h2 class="col-12">Server Info</h2>
   </div>
-  <div class="row">
-    <div class="col-12">Data</div>
-    <button id='target' class="btn btn-primary col-2">get Servers</button>
-  </div>
+  
+  <div id="servers" class="row" style="text-align: center; background: #ccc"></div>
 
   <div class="row">
-      <div class="col-12">Data</div>
-      <button id='target' class="btn btn-primary col-2">get Clients</button>
-  </div>
     
-  <ul id='messages'></ul>
-  <script src='js/jquery-1.7.2.min.js'></script>
+    <div class="col-2"></div>
+
+    <button id='' class="btn btn-secondary col-3" style="border-radius: 0px">Do something</button>
+    <div class="col-2"></div>
+
+    <button id='target' class="btn btn-primary col-3" style="border-radius: 0px">get Servers</button>
+    <div class="col-2"></div>
+
+  </div>
+
+  <div class="row" style="text-align: center; background: #aaa;">
+    <h2 class="col-12">Message Info</h2>
+  </div>
+  <ul id='messages' class="row" style="background: #ddd;"></ul>
+
+  <button id="StartBothRecoding">StartBothRecoding</button>
+
+  <hr>
+  <video controls autoplay playsinline></video>
+
+  <!-- <script src='js/jquery-1.7.2.min.js'></script> -->
+  <script src='js/jquery.min.js'></script>
   <script src='js/index.js'></script>
 
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script> -->
