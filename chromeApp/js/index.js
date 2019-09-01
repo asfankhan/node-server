@@ -43,7 +43,6 @@ function getServerRooms(){
     }
   });
 }
-
 function transferData(data){
   // obj = JSON.parse(data.responseText);
   console.log(data);
@@ -71,24 +70,24 @@ var blobs = [];
 var audioBlobs = [];
 let stream;
 
-
 var mediaConstraints = {
   audio: true,
   video: true
 };
 var context;
 function init() {
-try {
-    // Fix up for prefixing
-    window.AudioContext = window.AudioContext||window.webkitAudioContext;
-    context = new AudioContext();
-    console.log(context)
+    try {
+        // Fix up for prefixing
+        window.AudioContext = window.AudioContext||window.webkitAudioContext;
+        context = new AudioContext();
+        console.log(context)
 
+    }
+    catch(e) {
+        alert('Web Audio API is not supported in this browser');
+    }
 }
-catch(e) {
-    alert('Web Audio API is not supported in this browser');
-}
-}
+
 $("#Check-Audio").on("click", () =>{
     // MediaStream.getAudioTracks()
     // init()
@@ -105,10 +104,8 @@ $("#Check-Audio").on("click", () =>{
 
 })
 
-
-
 $("#StartBothRecoding").on("click", () =>{
-  console.log('s')
+  console.log('Start Rording')
   navigator.getUserMedia(constraints, successCallback, errorCallback);
 })
 
@@ -192,7 +189,7 @@ function stopRecordingCallback() {
   recorder.screen.stop();
   recorder.destroy();
   recorder = null;
-  document.getElementById('btn-start-recording').disabled = false;
+  document.getElementById('btn- -recording').disabled = false;
 }
 
 
@@ -221,6 +218,7 @@ document.getElementById('btn-start-recording').onclick = function() {
 };
 document.getElementById('btn-stop-recording').onclick = function() {
   this.disabled = true;
+  document.getElementById('btn-start-recording').disabled = false;
   recorder.stopRecording(stopRecordingCallback);
 };
 function addStreamStopListener(stream, callback) {

@@ -7,6 +7,14 @@
   <link rel="stylesheet" href="css/bootstrap.min.css">
 </head>
 <body class="container-fluid">
+    
+  <div class="row" style="background: #333;">
+
+    <button id='startClientServer' class="btn btn-primary col-3" style="border-radius: 0px">Start Client Server</button>
+
+    <button id='startClient' class="btn btn-primary col-3" style="border-radius: 0px">Start Client</button>
+
+  </div>
 
   <div class="row" style="text-align: center; background: #aaa;">
     <h2 class="col-12">Server Info</h2>
@@ -16,13 +24,13 @@
 
   <div class="row">
     
-    <div class="col-2"></div>
-
+    <div class="col-3"></div>
     <button id='' class="btn btn-secondary col-3" style="border-radius: 0px">Do something</button>
-    <div class="col-2"></div>
+    
+    <!-- <div class="col-2"></div> -->
 
     <button id='target' class="btn btn-primary col-3" style="border-radius: 0px">get Servers</button>
-    <div class="col-2"></div>
+    <div class="col-3"></div>
 
   </div>
 
@@ -31,14 +39,19 @@
   </div>
   <ul id='messages' class="row" style="background: #ddd;"></ul>
 
+  <button id="btn-start-recording">Start Recording</button>
+  <button id="btn-stop-recording">Stop Recording</button>
+
   <button id="StartBothRecoding">StartBothRecoding</button>
+  <h1>Data</h1>
 
   <hr>
-  <video controls autoplay playsinline></video>
+  <video style="height: 300px; width:450px;" controls autoplay playsinline></video>
 
   <!-- <script src='js/jquery-1.7.2.min.js'></script> -->
   <script src='js/jquery.min.js'></script>
   <script src='js/index.js'></script>
+  <script src='js/RecordRTC.js'></script>
 
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.js"></script> -->
 
