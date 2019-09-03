@@ -2,15 +2,16 @@
 $( document ).ready(function() {
   console.log( "Page Ready!" );
 
-  $( "#target" ).click(() => {
-    getServerRooms();
-  });
+  setOnClick();
+  receiveData();
   // getServerRooms();
   chrome.runtime.sendMessage("test");
 
 });
-function printWorking(var1){
-  console.log(" : ")
+function setOnClick(){
+  $( "#target" ).click(() => { getServerRooms() });
+  $( "#startClientServer" ).click(() => { sendData({type: 'create' , serverType:'clientServer'}) });
+  $( "#startClient" ).click(() => { sendData({type: 'create' , serverType:'client'}) });
 }
 function getServerRooms(){
   $.ajax({
@@ -43,6 +44,18 @@ function getServerRooms(){
     }
   });
 }
+function sendData(data){
+  chrome.runtime.sendMessage(data);
+}
+function receiveData(){
+  chrome.runtime.onMessage.addListener((data, sender, sendResponse) => {
+    console.log(data)
+  })
+}
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  console.log('message received!');
+});
+
 function transferData(data){
   // obj = JSON.parse(data.responseText);
   console.log(data);
