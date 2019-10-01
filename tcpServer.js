@@ -9,7 +9,7 @@ const host = '0.0.0.0';
 const server = net.createServer();
 
 let serverSocket;
-let sockets= [];
+let sockets= {};
 
 let serverSockets ={};
 let clientSockets = [];
@@ -29,7 +29,7 @@ server.on('connection', (socket) => {
     socket.address = socket.remoteAddress
     socket.port = socket.remotePort
 
-    sockets.push(socket);
+    sockets[socket.id] = socket;
 
     ///////////On Data Recieved///////////
     socket.on('data', function(data) {
@@ -39,12 +39,12 @@ server.on('connection', (socket) => {
 
         if(data.isServer){
 
-            serverSockets[socket.id] = socket;
+            serverSockets[socket.id] = { id:socket.id, address:socket.address, port:socket.port, server:true };
             console.log('>(Server) Total Client-Server Sockets Connected: ' + Object.keys(serverSockets).length);
 
         }else{
 
-            clientSockets[socket.id] = socket;
+            clientSockets[socket.id] = { id:socket.id, address:socket.address, port:socket.port, server:false };;
             console.log('>(Server) Total Client Sockets Connected: ' + Object.keys(clientSockets).length);
 
         }
@@ -90,6 +90,7 @@ app.get('/server', function(req, res, next) {
     res.json(serverSockets);
 });
 app.get('/data', function(req, res, next) {
+    console.log(serverSockets)
     res.json(serverSockets);
 });
 app.get('/test', function(req, res, next) {

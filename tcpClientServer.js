@@ -15,7 +15,7 @@ let server;
 
 connectedSocket  = null;
 
-let client = net.createConnection({host : host, port : port}, () => {
+let client = net.createConnection({host : awsHost, port : port}, () => {
 
     console.log('>Connected to Aws server via local endpoint:', client.localAddress + ':' + client.localPort);
 

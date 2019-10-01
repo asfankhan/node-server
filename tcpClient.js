@@ -14,7 +14,7 @@ const awsHost = '54.237.223.142';
 let server;
 
 
-let client = net.createConnection({host : host, port : port}, () => {
+let client = net.createConnection({host : awsHost, port : port}, () => {
 
     console.log('> connected to public server via local endpoint:', client.localAddress + ':' + client.localPort);
 
@@ -82,7 +82,7 @@ rl.on('line', (input) => {
     regex = /pick ([0-9])/
     if(input == "exit"){rl.close();}
     else if(input == 'find'){
-        http.get('http://localhost:33334/data', (resp) => {
+        http.get('http://'+awsHost+':33334/data', (resp) => {
         let data = '';
 
         // A chunk of data has been recieved.
@@ -92,7 +92,7 @@ rl.on('line', (input) => {
 
         // The whole response has been received. Print out the result.
         resp.on('end', () => {
-            console.log('Rooms: ',Object.keys(JSON.parse(data)));
+            console.log('Rooms: ',JSON.parse(data));
             this.getServers = JSON.parse(data)
         });
 
