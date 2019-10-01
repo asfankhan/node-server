@@ -49,14 +49,18 @@ this.serverData = {}
 client.on('data', (data) => {
     console.log(">(Client) " + data.toString());
     data = JSON.parse(data)
-    this.serverData = data
-    // c = require('net').createConnection({host : data.address, port : data.port},function () {
-    //     console.log('> (clientB) connected to clientA!');
+    // this.getServers = data
+    // let selectedSocket = this.getServers[Object.keys(this.getServers)[input.match(regex)[1]]]
+    console.log('Picked number address - ', data.address )
+    console.log('Picked number port - ', data.port )
+
+    c = require('net').createConnection({host : data.address, port : data.port},function () {
+        console.log('> (clientB) connected to clientA!');
     
-    //     c.on('data', function (data) {
-    //         console.log(data.toString());
-    //     });
-    // });
+        c.on('data', function (data) {
+            console.log(data.toString());
+        });
+    });
 });
 
 client.on('close', function() {
